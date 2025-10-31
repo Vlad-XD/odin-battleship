@@ -1,0 +1,47 @@
+{
+  "name": "odin-battleship",
+  "version": "1.0.0",
+  "description": "Building a Battleship-style strategy game in JavaScript with a test-driven development workflow powered by the Jest testing framework.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"$INIT_CWD\"",
+    "lint:fix": "eslint \"$INIT_CWD\" --fix",
+    "lint:staged": "lint-staged",
+    "format": "prettier --write \"$INIT_CWD\"",
+    "format:check": "prettier --check \"$INIT_CWD\"",
+    "prepare": "husky",
+    "test": "jest \"$INIT_CWD\"",
+    "test:watch": "jest \"$INIT_CWD\" --watch"
+  },
+  "lint-staged": {
+    "**/*.{js,mjs,cjs,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vlad-XD/odin-battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vlad-XD/odin-battleship/issues"
+  },
+  "homepage": "https://github.com/Vlad-XD/odin-battleship#readme",
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@eslint/js": "^9.39.0",
+    "babel-jest": "^30.2.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2"
+  }
+}
