@@ -1,0 +1,25 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1rem);
+  grid-template-rows: repeat(10, 1rem);
+}
+
+.cell {
+  border: solid black 1px;
+}
+
+.unattacked {
+  background-color: lightgrey;
+}
+
+.unattacked:hover {
+  cursor: pointer;
+}
+
+.hit {
+  background-color: red;
+}
+
+.missed {
+  background-color: grey;
+}

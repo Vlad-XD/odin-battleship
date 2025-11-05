@@ -59,7 +59,7 @@ class Gameboard {
       return true;
     }
 
-    // if the space was empty, return false;
+    // if the space is empty, return false;
     if (gridState === null) {
       return false;
     }
@@ -78,7 +78,7 @@ class Gameboard {
       this.#grid[x][y] = Gameboard.STATES.hit;
     }
 
-    // if the space was empty, update it to indicated a shot was misssed there
+    // if the space was empty, update it to indicated a shot was missed there
     if (gridState === null) {
       this.#grid[x][y] = Gameboard.STATES.missed;
     }
