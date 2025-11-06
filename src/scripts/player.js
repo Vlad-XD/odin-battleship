@@ -3,9 +3,11 @@ import { Gameboard } from "./gameboard.js";
 class Player {
   #name; // identifier for player
   #gameboard = new Gameboard();
+  #isComputer; // indicates if a player is actually a computer
 
-  constructor(name) {
+  constructor(name, isComputer = false) {
     this.#name = name;
+    this.#isComputer = isComputer;
   }
 
   get name() {
@@ -14,6 +16,10 @@ class Player {
 
   get gameboard() {
     return this.#gameboard;
+  }
+
+  get isComputer() {
+    return this.#isComputer;
   }
 }
 

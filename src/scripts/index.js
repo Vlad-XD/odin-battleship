@@ -2,8 +2,11 @@
 import * as renderer from "./renderer.js";
 import * as game from "./game.js";
 
+// variable declarations
+const COMPUTER_DELAY = 800; // delay in ms for when computer responds to player attack
+
 // start game and get players
-game.initGame("Vlad", "John");
+game.initGame("Vlad");
 const { player1, player2 } = game.getPlayers();
 
 const body = document.querySelector("body");
@@ -21,26 +24,6 @@ body.appendChild(board2);
 // REMINDER: players click their oppoents boards
 
 // check for attack position by finding nearest cell that was clicked within the board element
-board1.addEventListener("click", (e) => {
-  // Find the closest cell (closest element with data-row and data-col );
-  const cell = e.target.closest("[data-row][data-col]");
-
-  // ignore clicks if not on a cell
-  if (!cell) return;
-
-  // Extract coordinates of cell
-  const row = Number(cell.dataset.row);
-  const col = Number(cell.dataset.col);
-
-  // call attack function
-  const result = game.handleAttack(player2, row, col);
-
-  // if attack was successful, render cell with new state
-  if (result) {
-    renderer.updateCell(cell, result);
-  }
-});
-
 board2.addEventListener("click", (e) => {
   // Find the closest cell (closest element with data-row and data-col );
   const cell = e.target.closest("[data-row][data-col]");
@@ -58,5 +41,42 @@ board2.addEventListener("click", (e) => {
   // if attack was successful, render cell with new state
   if (result) {
     renderer.updateCell(cell, result);
+    // check if opponent is computer
+    if (game.opponentIsComputer) {
+      // if so, make the computer attack
+
+      // artifial delay for move to make computer less robotic
+      setTimeout(() => {
+        makeComputerAttack();
+      }, COMPUTER_DELAY);
+    }
   }
 });
+
+// helper function for simulating a computer attack
+function makeComputerAttack() {
+  const { row, col, result } = game.computerAttack();
+  // find cell on board using row and column value
+  const cell = board1.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  renderer.updateCell(cell, result);
+}
+
+// board1.addEventListener("click", (e) => {
+//   // Find the closest cell (closest element with data-row and data-col );
+//   const cell = e.target.closest("[data-row][data-col]");
+
+//   // ignore clicks if not on a cell
+//   if (!cell) return;
+
+//   // Extract coordinates of cell
+//   const row = Number(cell.dataset.row);
+//   const col = Number(cell.dataset.col);
+
+//   // call attack function
+//   const result = game.handleAttack(player2, row, col);
+
+//   // if attack was successful, render cell with new state
+//   if (result) {
+//     renderer.updateCell(cell, result);
+//   }
+// });
