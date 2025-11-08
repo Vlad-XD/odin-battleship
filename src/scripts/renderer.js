@@ -23,6 +23,13 @@ function renderGameboard(player) {
   return board;
 }
 
+// renders and returns both players' gameboards
+function renderGameboards(player1, player2) {
+  const board1 = renderGameboard(player1);
+  const board2 = renderGameboard(player2);
+  return { board1, board2 };
+}
+
 // updates the classes of a passed cell element based on the passed state
 function updateCell(cell, state) {
   cell.classList.remove("unattacked");
@@ -30,4 +37,10 @@ function updateCell(cell, state) {
   cell.dataset.state = state;
 }
 
-export { renderGameboard, updateCell };
+// renders the win screen at the end of the game given a passed name
+function renderWinScreen(name) {
+  const body = document.querySelector("body");
+  body.innerHTML = `${name} has won!`;
+}
+
+export { renderGameboards, updateCell, renderWinScreen };

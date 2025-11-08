@@ -2,11 +2,13 @@
 import { Player } from "./player.js";
 import { Ship } from "./ship.js";
 
+// variable declarations
 let player1;
 let player2;
 let currentPlayer; // currentPlayer holds the player whose turn it currently is;
 let opponent; // opponent holds opposite player to currentPlayer
 let computer; // computer object used to hold computer logic
+let winner = null; // holds the player who won the game
 
 function initGame(player1Name, player2Name = null) {
   player1 = new Player(player1Name);
@@ -24,15 +26,12 @@ function initGame(player1Name, player2Name = null) {
   opponent = player2;
 
   // add ships to players
-  const ship1 = new Ship(5);
-  const ship2 = new Ship(3);
-  const ship3 = new Ship(4);
   const gameboards = [player1.gameboard, player2.gameboard];
 
   for (const gameboard of gameboards) {
-    gameboard.placeShip(ship1, 2, 5, "horizontal");
-    gameboard.placeShip(ship2, 0, 0, "vertical");
-    gameboard.placeShip(ship3, 3, 3, "horizontal");
+    gameboard.placeShip(new Ship(5), 2, 5, "horizontal");
+    gameboard.placeShip(new Ship(3), 0, 0, "vertical");
+    gameboard.placeShip(new Ship(4), 3, 3, "horizontal");
   }
 }
 
@@ -51,6 +50,11 @@ function handleAttack(player, row, col) {
 
   // otherwise, attack the cell
   opponent.gameboard.receiveAttack(row, col);
+
+  // check for win condition
+  if (checkWinner() === true) {
+    winner = currentPlayer;
+  }
 
   // get results
   const result = opponent.gameboard.checkCoordinates(row, col);
@@ -114,10 +118,27 @@ function computerAttack() {
   return { row, col, result };
 }
 
+// return true if all of the opponent's ships have been sunk
+function checkWinner() {
+  return opponent.gameboard.allShipsSunk();
+}
+
+// return true if game has ended (winner has been determined)
+function hasEnded() {
+  return winner === null ? false : true;
+}
+
+// function that returns winner of game
+function getWinner() {
+  return winner;
+}
+
 export {
   initGame,
   handleAttack,
   getPlayers,
   opponentIsComputer,
   computerAttack,
+  hasEnded,
+  getWinner,
 };
