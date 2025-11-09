@@ -1,4 +1,5 @@
 // module containing the game logic itself
+import { Gameboard } from "./gameboard.js";
 import { Player } from "./player.js";
 import { Ship } from "./ship.js";
 
@@ -24,15 +25,44 @@ function initGame(player1Name, player2Name = null) {
   // player 1 always starts the game
   currentPlayer = player1;
   opponent = player2;
+}
 
-  // add ships to players
-  const gameboards = [player1.gameboard, player2.gameboard];
+// places a ship of the passed length a the given coordinate for the passed player
+function placeShip(player, shipLength, x, y, orientation) {
+  const result = player.gameboard.placeShip(
+    new Ship(shipLength),
+    x,
+    y,
+    orientation,
+  );
+  return result;
+}
 
-  for (const gameboard of gameboards) {
-    gameboard.placeShip(new Ship(5), 2, 5, "horizontal");
-    gameboard.placeShip(new Ship(3), 0, 0, "vertical");
-    gameboard.placeShip(new Ship(4), 3, 3, "horizontal");
-  }
+// places a ship at a valid random coordinate and at a random orientation
+function placeRandomShip(player, shipLength) {
+  const ROWS = 10;
+  const COLS = 10;
+  let result; //holds result of placeShip, indicating if a ship wwas place sucessfully
+
+  do {
+    const orientation =
+      Math.random() < 0.5
+        ? Gameboard.ORIENTATIONS.horizontal
+        : Gameboard.ORIENTATIONS.vertical;
+
+    // generate random location based on ship length and orientation
+    if (orientation === Gameboard.ORIENTATIONS.vertical) {
+      const x = Math.floor(Math.random() * ROWS);
+      const y = Math.floor(Math.random() * (COLS - shipLength + 1));
+      result = placeShip(player, shipLength, x, y, orientation);
+    }
+
+    if (orientation === Gameboard.ORIENTATIONS.horizontal) {
+      const y = Math.floor(Math.random() * (ROWS - shipLength + 1));
+      const x = Math.floor(Math.random() * COLS);
+      result = placeShip(player, shipLength, x, y, orientation);
+    }
+  } while (result === false);
 }
 
 // called by board DOM element to handle player attacks
@@ -135,6 +165,7 @@ function getWinner() {
 
 export {
   initGame,
+  placeRandomShip,
   handleAttack,
   getPlayers,
   opponentIsComputer,

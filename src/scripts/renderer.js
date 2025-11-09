@@ -30,11 +30,36 @@ function renderGameboards(player1, player2) {
   return { board1, board2 };
 }
 
+// renders the ships on a gameboard to a gameboard element
+function renderShips(gameboard, boardElement) {
+  for (let x = 0; x < NO_OF_ROWS; x++) {
+    for (let y = 0; y < NO_OF_COLS; y++) {
+      if (gameboard.checkCoordinates(x, y) === true) {
+        const cell = fetchCell(boardElement, x, y);
+        cell.classList.add("ship-location");
+      }
+    }
+  }
+}
+
+// removes ships on a passed gameboard element
+function removeShips(board) {
+  const cells = board.querySelectorAll(".cell");
+  for (const cell of cells) {
+    cell.classList.remove("ship-location");
+  }
+}
+
 // updates the classes of a passed cell element based on the passed state
 function updateCell(cell, state) {
   cell.classList.remove("unattacked");
   cell.classList.add(state);
   cell.dataset.state = state;
+}
+
+// helper function for getting a cell element from a passed board element
+function fetchCell(board, row, col) {
+  return board.querySelector(`[data-row="${row}"][data-col="${col}"]`);
 }
 
 // renders the win screen at the end of the game given a passed name
@@ -43,4 +68,10 @@ function renderWinScreen(name) {
   body.innerHTML = `${name} has won!`;
 }
 
-export { renderGameboards, updateCell, renderWinScreen };
+export {
+  renderGameboards,
+  renderShips,
+  removeShips,
+  updateCell,
+  renderWinScreen,
+};

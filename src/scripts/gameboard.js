@@ -31,7 +31,18 @@ class Gameboard {
   }
 
   // takes a ship object and places it at the passed coordinates on the gameboard
+  // returns true if ship was successfully placed, and false otherwise
   placeShip(ship, x, y, orientation) {
+    // test if ship placement is valid
+    if (this.#testShipPlacement(ship, x, y, orientation) == false) {
+      return false;
+    }
+
+    // test if ship does not overlap existing ships
+    if (this.#testShipOverlap(ship, x, y, orientation) == false) {
+      return false;
+    }
+
     // add the ship to the list of ships
     this.#ships.push(ship);
 
@@ -48,6 +59,52 @@ class Gameboard {
         this.#grid[x][y + i] = ship;
       }
     }
+
+    return true;
+  }
+
+  // helper function for testing ship placement
+  // returns false if ship placement is invalid, true if it is valid
+  #testShipPlacement(ship, x, y, orientation) {
+    const length = ship.length;
+
+    if (orientation === Gameboard.ORIENTATIONS.vertical) {
+      if (y > this.#cols - length) {
+        return false;
+      }
+    }
+
+    if (orientation === Gameboard.ORIENTATIONS.horizontal) {
+      if (x > this.#rows - length) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // helper function for testing ship overlap when placing ship
+  // returns false if ship would overlap an existing ship, true otherwise
+  #testShipOverlap(ship, x, y, orientation) {
+    const length = ship.length;
+
+    if (orientation === Gameboard.ORIENTATIONS.vertical) {
+      for (let i = 0; i < length; i++) {
+        if (this.checkCoordinates(x, y + i) === true) {
+          return false;
+        }
+      }
+    }
+
+    if (orientation === Gameboard.ORIENTATIONS.horizontal) {
+      for (let i = 0; i < length; i++) {
+        if (this.checkCoordinates(x + i, y) === true) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   // returns the state of the gameboard at the passed coordinates
@@ -94,6 +151,13 @@ class Gameboard {
     }
 
     return true;
+  }
+
+  // resets the state of the board
+  reset() {
+    this.#grid = [];
+    this.#ships = [];
+    this.initializeGrid();
   }
 }
 

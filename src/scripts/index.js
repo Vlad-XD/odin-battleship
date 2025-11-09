@@ -6,6 +6,15 @@ import * as game from "./game.js";
 const COMPUTER_DELAY = 800; // delay in ms for when computer responds to player attack
 const WIN_SCREEN_DELAY = 3000; // delay in ms before transitioning to win screen
 
+const SHIPS = {
+  // ship types and sizes
+  carrier: 5,
+  battleship: 4,
+  cruiser: 3,
+  submarine: 3,
+  destroyer: 2,
+};
+
 const isSinglePlayer = true; // variable that holds a boolean representing whether only one player is playing
 
 // start game and get players
@@ -26,10 +35,78 @@ body.appendChild(board1);
 body.appendChild(title2);
 body.appendChild(board2);
 
-// REMINDER: players click their oppoents boards
+// place player ships
+waitForShipPlacements();
 
 // activate player boards
 enablePlayerBoards();
+
+// function to handle waiting for ship placement
+async function waitForShipPlacements() {
+  // generate and render initial ship location
+  generateRandomPlayerShips(player1);
+  renderer.renderShips(player1.gameboard, board1);
+
+  // add buttons for ship shuffle and confirmation
+  const { selectionBtn, confirmationBtn } = addShipSelectionButtons();
+  attachShipSelelctionHandling(selectionBtn, player1, board1);
+
+  // wait for player to select ships
+  await waitForPlayer1ToPlaceShips(selectionBtn, confirmationBtn);
+
+  // if single player, generate ships for computer
+  if (isSinglePlayer) {
+    generateRandomPlayerShips(player2);
+  }
+}
+
+// helper function for placing ships for players at a random location
+function generateRandomPlayerShips(player) {
+  // reset player board
+  player.gameboard.reset();
+
+  for (const length of Object.values(SHIPS)) {
+    game.placeRandomShip(player, length);
+  }
+}
+
+// helper function for adding ship selection buttons
+// returns two buttons, one for random selection and one for confirmation
+function addShipSelectionButtons() {
+  const selectionBtn = document.createElement("button");
+  selectionBtn.textContent = "Shuffle Ships";
+
+  const confirmationBtn = document.createElement("button");
+  confirmationBtn.textContent = "Place Ships";
+
+  body.appendChild(selectionBtn);
+  body.appendChild(confirmationBtn);
+
+  return { selectionBtn, confirmationBtn };
+}
+
+// helper function for attaching ship selection functionality
+function attachShipSelelctionHandling(button, player, board) {
+  button.addEventListener("click", () => {
+    renderer.removeShips(board);
+    generateRandomPlayerShips(player);
+    renderer.renderShips(player.gameboard, board);
+  });
+}
+
+// helper function for adding functionality to ship selection buttons
+// returns a promise utilized to wait for player selection;
+function waitForPlayer1ToPlaceShips(selectionBtn, confirmationBtn) {
+  return new Promise((resolve) => {
+    function handleDoneClick() {
+      selectionBtn.remove();
+      confirmationBtn.remove();
+      resolve();
+    }
+
+    confirmationBtn.addEventListener("click", handleDoneClick);
+  });
+}
 
 // helper function for simulating a computer attack
 function makeComputerAttack() {

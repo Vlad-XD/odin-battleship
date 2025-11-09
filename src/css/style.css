@@ -16,6 +16,10 @@
   cursor: pointer;
 }
 
+.ship-location {
+  background-color: green;
+}
+
 .hit {
   background-color: red;
 }
