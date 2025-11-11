@@ -8,7 +8,7 @@ let player1;
 let player2;
 let currentPlayer; // currentPlayer holds the player whose turn it currently is;
 let opponent; // opponent holds opposite player to currentPlayer
-let computer; // computer object used to hold computer logic
+let computer = null; // computer object used to hold computer logic
 let winner = null; // holds the player who won the game
 
 function initGame(player1Name, player2Name = null) {
@@ -163,6 +163,23 @@ function getWinner() {
   return winner;
 }
 
+// function for resetting game with current conditions (i.e., same players and mode)
+function resetGame() {
+  // reset gameboards
+  player1.gameboard.reset();
+  player2.gameboard.reset();
+
+  // reset intial conditions
+  currentPlayer = player1;
+  opponent = player2;
+  winner = null;
+
+  // if computer was being used, reset computer object
+  if (computer !== null) {
+    computer = new Computer();
+  }
+}
+
 export {
   initGame,
   placeRandomShip,
@@ -172,4 +189,5 @@ export {
   computerAttack,
   hasEnded,
   getWinner,
+  resetGame,
 };

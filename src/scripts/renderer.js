@@ -62,10 +62,30 @@ function fetchCell(board, row, col) {
   return board.querySelector(`[data-row="${row}"][data-col="${col}"]`);
 }
 
-// renders the win screen at the end of the game given a passed name
-function renderWinScreen(name) {
-  const body = document.querySelector("body");
-  body.innerHTML = `${name} has won!`;
+// renders the win screen that will be utilized at the end of a match
+function renderWinScreen() {
+  // create overlay element
+  const overlay = document.createElement("div");
+  overlay.classList.add("win-overlay", "hidden");
+
+  // create a pop up element
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  overlay.appendChild(popup);
+
+  // make contents for pop up
+  const winTitle = document.createElement("h2");
+  winTitle.classList.add("win-title");
+
+  const playAgainBtn = document.createElement("button");
+  playAgainBtn.classList.add("play-again-btn");
+  playAgainBtn.type = "button";
+  playAgainBtn.textContent = "Play Again";
+
+  popup.appendChild(winTitle);
+  popup.appendChild(playAgainBtn);
+
+  return overlay;
 }
 
 export {

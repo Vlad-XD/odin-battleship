@@ -41,6 +41,9 @@ function initiateTitleScreen() {
 
 // helper function for starting single player game
 async function startSinglePlayerGame() {
+  // set up win screen
+  setUpWinScreen();
+
   isSinglePlayer = true; // variable that holds a boolean representing whether only one player is playing
 
   // start game and get players
@@ -158,7 +161,7 @@ async function terminateGame() {
   // have a brief delay before showing win screen
   await new Promise((resolve) => setTimeout(resolve, 0)); // yield control to allow final render
   await delay(WIN_SCREEN_DELAY);
-  renderer.renderWinScreen(winner.name);
+  showWinScreen(winner.name);
 }
 
 // helper functions for enabling boards (adding event listeners)
@@ -246,4 +249,61 @@ function handlePlayer2Click(e) {
 // helper function utilized to simulate a delay in gameplay
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// helper function for setting up win screen
+function setUpWinScreen() {
+  const winScreen = renderer.renderWinScreen();
+  body.appendChild(winScreen);
+
+  const playAgainBtn = winScreen.querySelector(".play-again-btn");
+  playAgainBtn.addEventListener("click", handlePlayAgain);
+}
+
+// helper function for activating win screen
+function showWinScreen(name) {
+  const winScreen = body.querySelector(".win-overlay");
+
+  const winTitle = winScreen.querySelector(".win-title");
+  winTitle.textContent = `${name} Wins!`;
+  winScreen.classList.remove("hidden");
+}
+
+// helper function for hiding win screen
+function hideWinScreen() {
+  const winScreen = body.querySelector(".win-overlay");
+  winScreen.classList.add("hidden");
+}
+
+// helper function for helping restart a single player game
+async function restartSinglePlayerGame() {
+  // reset game
+  game.resetGame();
+
+  // render gameboard elements
+  const { board1: newBoard1, board2: newBoard2 } = renderer.renderGameboards(
+    player1,
+    player2,
+  );
+  board1.replaceWith(newBoard1);
+  board2.replaceWith(newBoard2);
+  board1 = newBoard1;
+  board2 = newBoard2;
+
+  // place player ships
+  await waitForShipPlacements();
+
+  // activate player boards
+  enablePlayerBoards();
+}
+
+// helper function for play again putton functionality
+async function handlePlayAgain() {
+  // hide win screen
+  hideWinScreen();
+
+  // check if single player game is being player
+  if (isSinglePlayer) {
+    await restartSinglePlayerGame();
+  }
 }

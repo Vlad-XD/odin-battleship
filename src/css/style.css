@@ -38,3 +38,7 @@ button:hover {
 .missed {
   background-color: grey;
 }
+
+.hidden {
+  display: none;
+}
