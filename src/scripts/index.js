@@ -15,31 +15,57 @@ const SHIPS = {
   destroyer: 2,
 };
 
-const isSinglePlayer = true; // variable that holds a boolean representing whether only one player is playing
-
-// start game and get players
-game.initGame("Vlad");
-const { player1, player2 } = game.getPlayers();
-
-// render gameboard elements
-const { board1, board2 } = renderer.renderGameboards(player1, player2);
-
 const body = document.querySelector("body");
-const title1 = document.createElement("h1");
-title1.textContent = `${player1.name}`;
-const title2 = document.createElement("h1");
-title2.textContent = `${player2.name}`;
 
-body.appendChild(title1);
-body.appendChild(board1);
-body.appendChild(title2);
-body.appendChild(board2);
+let isSinglePlayer;
+let player1;
+let player2;
+let board1;
+let board2;
 
-// place player ships
-waitForShipPlacements();
+// begin at title screen
+initiateTitleScreen();
 
-// activate player boards
-enablePlayerBoards();
+// function to handle title screen functionality
+function initiateTitleScreen() {
+  // find title screen buttons and attach event handlers
+  const singlePlayerBtn = document.querySelector("button.single-player-btn");
+  singlePlayerBtn.addEventListener("click", () => {
+    // clear title screen
+    body.innerHTML = "";
+
+    // start single player game
+    startSinglePlayerGame();
+  });
+}
+
+// helper function for starting single player game
+async function startSinglePlayerGame() {
+  isSinglePlayer = true; // variable that holds a boolean representing whether only one player is playing
+
+  // start game and get players
+  game.initGame("Player 1");
+  ({ player1, player2 } = game.getPlayers());
+
+  // render gameboard elements
+  ({ board1, board2 } = renderer.renderGameboards(player1, player2));
+
+  const title1 = document.createElement("h1");
+  title1.textContent = `${player1.name}`;
+  const title2 = document.createElement("h1");
+  title2.textContent = `${player2.name}`;
+
+  body.appendChild(title1);
+  body.appendChild(board1);
+  body.appendChild(title2);
+  body.appendChild(board2);
+
+  // place player ships
+  await waitForShipPlacements();
+
+  // activate player boards
+  enablePlayerBoards();
+}
 
 // function to handle waiting for ship placement
 async function waitForShipPlacements() {
