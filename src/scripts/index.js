@@ -51,33 +51,11 @@ async function startSinglePlayerGame() {
   ({ player1, player2 } = game.getPlayers());
 
   // render gameboard elements
-  ({ board1, board2 } = renderer.renderGameboards(player1, player2));
+  const gameContainer = renderer.renderGameContainer(player1, player2);
+  board1 = gameContainer.querySelector(".board1-container");
+  board2 = gameContainer.querySelector(".board2-container");
 
-  const title1 = document.createElement("h1");
-  title1.classList.add("player-title");
-  title1.textContent = `${player1.name}`;
-  const title2 = document.createElement("h1");
-  title2.classList.add("player-title");
-  title2.textContent = `${player2.name}`;
-
-  // add elements to dom
-  const gameContainer = document.createElement("div");
-  gameContainer.classList.add("game-container");
-
-  const boardContainer1 = document.createElement("div");
-  boardContainer1.classList.add("board-container", "player-container");
-
-  const boardContainer2 = document.createElement("div");
-  boardContainer2.classList.add("board-container", "opponent-container");
-
-  boardContainer1.appendChild(title1);
-  boardContainer1.appendChild(board1);
-  boardContainer2.appendChild(title2);
-  boardContainer2.appendChild(board2);
-
-  gameContainer.appendChild(boardContainer1);
-  gameContainer.appendChild(boardContainer2);
-
+  // add elements to DOM
   body.appendChild(gameContainer);
 
   // place player ships
@@ -119,19 +97,8 @@ function generateRandomPlayerShips(player) {
 // helper function for adding ship selection buttons
 // returns two buttons, one for random selection and one for confirmation
 function addShipSelectionButtons() {
-  const selectionBtn = document.createElement("button");
-  selectionBtn.classList.add("place-btn");
-  selectionBtn.textContent = "Shuffle Ships";
-
-  const confirmationBtn = document.createElement("button");
-  confirmationBtn.classList.add("place-btn");
-  confirmationBtn.textContent = "Place Ships";
-
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("place-btn-container");
-
-  buttonContainer.appendChild(selectionBtn);
-  buttonContainer.appendChild(confirmationBtn);
+  const { buttonContainer, selectionBtn, confirmationBtn } =
+    renderer.renderShipSelectionButtons();
 
   body.appendChild(buttonContainer);
 

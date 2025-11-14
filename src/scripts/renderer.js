@@ -23,6 +23,45 @@ function renderGameboard(player) {
   return board;
 }
 
+// renders gameboard container containing initial gameboards and player titles
+function renderGameContainer(player1, player2) {
+  const { board1, board2 } = renderGameboards(player1, player2);
+
+  const title1 = document.createElement("h1");
+  title1.classList.add("player-title");
+  title1.textContent = `${player1.name}`;
+  const title2 = document.createElement("h1");
+  title2.classList.add("player-title");
+  title2.textContent = `${player2.name}`;
+
+  const gameContainer = document.createElement("div");
+  gameContainer.classList.add("game-container");
+
+  const boardContainer1 = document.createElement("div");
+  boardContainer1.classList.add(
+    "board-container",
+    "board1-container",
+    "player-container",
+  );
+
+  const boardContainer2 = document.createElement("div");
+  boardContainer2.classList.add(
+    "board-container",
+    "board2-container",
+    "opponent-container",
+  );
+
+  boardContainer1.appendChild(title1);
+  boardContainer1.appendChild(board1);
+  boardContainer2.appendChild(title2);
+  boardContainer2.appendChild(board2);
+
+  gameContainer.appendChild(boardContainer1);
+  gameContainer.appendChild(boardContainer2);
+
+  return gameContainer;
+}
+
 // renders and returns both players' gameboards
 function renderGameboards(player1, player2) {
   const board1 = renderGameboard(player1);
@@ -88,10 +127,31 @@ function renderWinScreen() {
   return overlay;
 }
 
+// renders the buttons utilized when placing ships/selecting ship locations
+function renderShipSelectionButtons() {
+  const selectionBtn = document.createElement("button");
+  selectionBtn.classList.add("place-btn");
+  selectionBtn.textContent = "Shuffle Ships";
+
+  const confirmationBtn = document.createElement("button");
+  confirmationBtn.classList.add("place-btn");
+  confirmationBtn.textContent = "Place Ships";
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("place-btn-container");
+
+  buttonContainer.appendChild(selectionBtn);
+  buttonContainer.appendChild(confirmationBtn);
+
+  return { buttonContainer, selectionBtn, confirmationBtn };
+}
+
 export {
   renderGameboards,
+  renderGameContainer,
   renderShips,
   removeShips,
   updateCell,
   renderWinScreen,
+  renderShipSelectionButtons,
 };
