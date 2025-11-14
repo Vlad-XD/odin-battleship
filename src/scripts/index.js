@@ -54,14 +54,31 @@ async function startSinglePlayerGame() {
   ({ board1, board2 } = renderer.renderGameboards(player1, player2));
 
   const title1 = document.createElement("h1");
+  title1.classList.add("player-title");
   title1.textContent = `${player1.name}`;
   const title2 = document.createElement("h1");
+  title2.classList.add("player-title");
   title2.textContent = `${player2.name}`;
 
-  body.appendChild(title1);
-  body.appendChild(board1);
-  body.appendChild(title2);
-  body.appendChild(board2);
+  // add elements to dom
+  const gameContainer = document.createElement("div");
+  gameContainer.classList.add("game-container");
+
+  const boardContainer1 = document.createElement("div");
+  boardContainer1.classList.add("board-container", "player-container");
+
+  const boardContainer2 = document.createElement("div");
+  boardContainer2.classList.add("board-container", "opponent-container");
+
+  boardContainer1.appendChild(title1);
+  boardContainer1.appendChild(board1);
+  boardContainer2.appendChild(title2);
+  boardContainer2.appendChild(board2);
+
+  gameContainer.appendChild(boardContainer1);
+  gameContainer.appendChild(boardContainer2);
+
+  body.appendChild(gameContainer);
 
   // place player ships
   await waitForShipPlacements();
@@ -78,7 +95,7 @@ async function waitForShipPlacements() {
 
   // add buttons for ship shuffle and confirmation
   const { selectionBtn, confirmationBtn } = addShipSelectionButtons();
-  attachShipSelelctionHandling(selectionBtn, player1, board1);
+  attachShipSelectionHandling(selectionBtn, player1, board1);
 
   // wait for player to select ships
   await waitForPlayer1ToPlaceShips(selectionBtn, confirmationBtn);
@@ -103,19 +120,26 @@ function generateRandomPlayerShips(player) {
 // returns two buttons, one for random selection and one for confirmation
 function addShipSelectionButtons() {
   const selectionBtn = document.createElement("button");
+  selectionBtn.classList.add("place-btn");
   selectionBtn.textContent = "Shuffle Ships";
 
   const confirmationBtn = document.createElement("button");
+  confirmationBtn.classList.add("place-btn");
   confirmationBtn.textContent = "Place Ships";
 
-  body.appendChild(selectionBtn);
-  body.appendChild(confirmationBtn);
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("place-btn-container");
+
+  buttonContainer.appendChild(selectionBtn);
+  buttonContainer.appendChild(confirmationBtn);
+
+  body.appendChild(buttonContainer);
 
   return { selectionBtn, confirmationBtn };
 }
 
 // helper function for attaching ship selection functionality
-function attachShipSelelctionHandling(button, player, board) {
+function attachShipSelectionHandling(button, player, board) {
   button.addEventListener("click", () => {
     renderer.removeShips(board);
     generateRandomPlayerShips(player);
@@ -173,6 +197,10 @@ function enablePlayerBoards() {
   if (!isSinglePlayer) {
     board1.addEventListener("click", handlePlayer2Click);
   }
+
+  // mark game container as active through a class
+  const gameContainer = body.querySelector(".game-container");
+  gameContainer.classList.add("boards-active");
 }
 
 // helper function for disabling boards
@@ -184,6 +212,10 @@ function disableBoards() {
   if (!isSinglePlayer) {
     board1.removeEventListener("click", handlePlayer2Click);
   }
+
+  //  remove active class from game container
+  const gameContainer = body.querySelector(".game-container");
+  gameContainer.classList.remove("boards-active");
 }
 
 // helper functions for event listeners

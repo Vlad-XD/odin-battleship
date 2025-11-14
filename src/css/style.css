@@ -1,44 +1,232 @@
 /* Barlow Condensed font import */
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+:root {
+  --font-main: "Barlow Condensed", sans-serif;
+  --main-bg-color: #091f3d;
+  --main-font-color: white;
+  --main-title-font-size: clamp(3.5rem, 10vw, 10rem);
+  --main-screen-btn-size: clamp(1.1rem, 2.5vw, 1.8rem);
+
+  --player-title-font-size: 2rem;
+  --place-btn-font-size: 1.25rem;
+  --grid-cell-width: clamp(1rem, 3vw, 2rem);
+  --cell-border-color: #0d1b2a;
+  --unattacked-cell-color: #adb5bd5d;
+  --ship-location-cell-color: rgba(255, 255, 255, 0.7);
+  --hit-cell-color: #a4161a;
+  --missed-cell-color: #2a3947a2;
+
+  --win-overlay-bg-color: rgba(0, 0, 0, 0.8);
+  --win-title-font-size: clamp(3.5rem, 10vw, 5rem);
+  --play-again-btn-size: clamp(1.1rem, 2.5vw, 1.5rem);
+}
+
+html,
 body {
-  font-family: "Barlow Condensed", sans-serif;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--main-font-color);
+  background-color: var(--main-bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.main-screen-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-screen-vertical-line {
+  align-self: flex-start;
+  margin-left: calc(var(--main-title-font-size));
+  border-left: solid calc(var(--main-title-font-size)*0.15) white;
+  min-height: calc(var(--main-title-font-size)*0.5);
+}
+
+.main-title {
+  border-top: solid calc(var(--main-title-font-size)*0.15) white;
+  font-size: var(--main-title-font-size);
+  white-space: nowrap;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 3rem;
+  padding: 0 calc(var(--main-title-font-size)*0.4);
+}
+
+.single-player-btn {
+  color: var(--main-font-color);
+  font-size: var(--main-screen-btn-size);
+  background-color: var(--main-bg-color);
+  border: solid 1px var(--main-font-color);
+  border-radius: 0.25rem;
+  padding: 0.2rem 1rem;
+  white-space: nowrap;
+}
+
+.single-player-btn:hover,
+.single-player-btn:active {
+  background-color: var(--main-font-color);
+  color: var(--main-bg-color);
+  transform: scale(0.97);
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.player-title{
+  font-size: var(--player-title-font-size);
+  margin-bottom: 1rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, var(--grid-cell-width));
+  grid-template-rows: repeat(10, var(--grid-cell-width));
+}
+
+.cell {
+  border: solid var(--cell-border-color) 1px;
+}
+
+.unattacked {
+  background-color: var(--unattacked-cell-color);
+}
+
+.boards-active .opponent-container .unattacked:hover {
+  cursor: pointer;
+}
+
+.ship-location {
+  background-color: var(--ship-location-cell-color);
+}
+
+.hit {
+  background-color: var(--hit-cell-color);
+}
+
+.missed {
+  background-color: var(--missed-cell-color);
+}
+
+.place-btn-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.place-btn {
+  color: var(--main-font-color);
+  font-size: var(--place-btn-font-size);
+  background-color: var(--main-bg-color);
+  border: solid 1px var(--main-font-color);
+  border-radius: 0.25rem;
+  padding: 0.2rem 1rem;
+  white-space: nowrap;
+}
+
+.place-btn:hover,
+.place-btn:active {
+  background-color: var(--main-font-color);
+  color: var(--main-bg-color);
+  transform: scale(0.97);
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.win-overlay {
+  position: fixed;         
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background-color: var(--win-overlay-bg-color);
+  display: flex;            
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;            
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.win-title {
+  font-size: var(--win-title-font-size);
+  font-weight: bold;
+}
+
+.play-again-btn {
+  color: var(--main-font-color);
+  font-size: var(--play-again-btn-size);
+  background-color: transparent;
+  border: solid 1px var(--main-font-color);
+  border-radius: 0.25rem;
+  padding: 0.2rem 1rem;
+  white-space: nowrap;
+}
+
+.play-again-btn:hover,
+.play-again-btn:active {
+  background-color: var(--main-font-color);
+  color: var(--win-overlay-bg-color);
+  transform: scale(0.97);
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.win-overlay, 
+.popup {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 button:hover { 
   cursor: pointer;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(10, 1rem);
-  grid-template-rows: repeat(10, 1rem);
-}
-
-.cell {
-  border: solid black 1px;
-}
-
-.unattacked {
-  background-color: lightgrey;
-}
-
-.unattacked:hover {
-  cursor: pointer;
-}
-
-.ship-location {
-  background-color: green;
-}
-
-.hit {
-  background-color: red;
-}
-
-.missed {
-  background-color: grey;
-}
 
 .hidden {
   display: none;
+}
+
+@media (max-width: 600px) {
+  .game-container {
+    flex-direction: column;
+  }
+
+  .place-btn-container {
+    flex-direction: column;
+  }
 }
